@@ -11,6 +11,9 @@ def match_pattern(input_line: str, pattern: str) -> bool:
     translated_pattern = translated_pattern.replace(r"\d", r"\d")
     translated_pattern = translated_pattern.replace(r"\w", r"\w")
     
+    # Handle full match by adding anchors
+    translated_pattern = f"^{translated_pattern}$"
+    
     # Compile regex pattern
     try:
         regex = re.compile(translated_pattern)
@@ -19,7 +22,7 @@ def match_pattern(input_line: str, pattern: str) -> bool:
         sys.exit(1)
     
     # Match the pattern against the input line
-    return bool(regex.fullmatch(input_line))
+    return bool(regex.match(input_line))
 
 def main():
     """Main."""
