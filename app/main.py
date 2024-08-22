@@ -7,47 +7,27 @@ def matcher(input_line, pattern):
         return False
 
     if pattern.startswith("\\d"):
-        if input_line[0].isdigit():
-            return matcher(input_line[1:], pattern[2:])
-        else:
-            return matcher(input_line[1:], pattern)
-    
-    elif pattern.startswith("\\w"):
-        if input_line[0].isalnum():
-            return matcher(input_line[1:], pattern[2:])
-        else:
-            return matcher(input_line[1:], pattern)
-    
-    else:
-        if input_line[0] == pattern[0]:
-            return matcher(input_line[1:], pattern[1:])
-        else:
-            return matcher(input_line[1:], pattern)
-
-def match_pattern(input_line, pattern):
-    if pattern.startswith("\\d"):
         if input_line and input_line[0].isdigit():
-            # Continue matching after the digit
-            return match_pattern(input_line[1:], pattern[2:])
+            return matcher(input_line[1:], pattern[2:])
+        else:
+            return False
+    
     elif pattern.startswith("\\w"):
         if input_line and input_line[0].isalnum():
-            # Continue matching after the alphanumeric character
-            return match_pattern(input_line[1:], pattern[2:])
-    elif pattern.startswith("[^") and "]" in pattern:
-        excluded_chars = pattern[2:pattern.index("]")]
-        if input_line and input_line[0] not in excluded_chars:
-            return match_pattern(input_line[1:], pattern[pattern.index("]")+1:])
-    elif pattern.startswith("[") and "]" in pattern:
-        allowed_chars = pattern[1:pattern.index("]")]
-        if input_line and input_line[0] in allowed_chars:
-            return match_pattern(input_line[1:], pattern[pattern.index("]")+1:])
-    elif input_line.startswith(pattern):
-        return True
-    elif len(input_line) > 1:
-        return match_pattern(input_line[1:], pattern)
+            return matcher(input_line[1:], pattern[2:])
+        else:
+            return False
+    
     else:
-        raise RuntimeError(f"Unhandled pattern: {pattern}")
+        if input_line and input_line[0] == pattern[0]:
+            return matcher(input_line[1:], pattern[1:])
+        else:
+            return False
 
+def match_pattern(input_line, pattern):
+    for i in range(len(input_line)):
+        if matcher(input_line[i:], pattern):
+            return True
     return False
 
 
