@@ -25,7 +25,21 @@ def matcher(input_line, pattern):
             return matcher(input_line[1:], pattern)
 
 def match_pattern(input_line, pattern):
-    return matcher(input_line, pattern)
+    if len(pattern) == 1:
+        return pattern in input_line
+    elif pattern.startswith("\\d"):
+        return any(char.isdigit() for char in input_line)
+    elif pattern.startswith("\\w"):
+        return any(char.isalnum() for char in input_line)
+    elif pattern.startswith("[^"):
+        excluded_chars = pattern[2:-1]
+        return all(char not in excluded_chars for char in input_line)
+    elif pattern.startswith("[") and pattern.endswith("]"):
+        allowed_chars = pattern[1:-1]
+        return any(char in allowed_chars for char in input_line)
+    else:
+        return matcher(input_line, pattern)
+
 
 def main():
     if len(sys.argv) != 3 or sys.argv[1] != "-E":
